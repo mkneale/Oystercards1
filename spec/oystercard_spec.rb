@@ -43,4 +43,9 @@ RSpec.describe Oystercard do
       expect(subject).not_to be_in_journey
     end
 
+    context 'touch in without minimum fare' do
+      it 'raises an error if touch_in with balance less than minimum_fare' do
+        expect { subject.touch_in }.to raise_error("Too little balance. Card now has a balance of #{subject.balance}")
+      end
+    end
 end
