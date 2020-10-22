@@ -38,14 +38,22 @@ RSpec.describe Oystercard do
       expect(subject).to be_in_journey
     end
 
-    it 'can touch out' do
-      subject.touch_out
-      expect(subject).not_to be_in_journey
-    end
-
     context 'touch in without minimum fare' do
       it 'raises an error if touch_in with balance less than minimum_fare' do
         expect { subject.touch_in }.to raise_error("Too little balance. Card now has a balance of #{subject.balance}")
+      end
+    end
+
+    describe 'touch out behaviours' do #sort it out
+      it 'can touch out' do
+        subject.touch_out
+        expect(subject).not_to be_in_journey
+      end
+
+      it 'deducts minimum fare from balance when touch out' do
+        subject.top_up(30)
+        subject.touch_in
+        expect{ subject.touch_out }.to change{ subject.balance }.by(-Oystercard::MINIMUM_FARE)
       end
     end
 end
